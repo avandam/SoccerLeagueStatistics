@@ -11,39 +11,32 @@ namespace SoccerLeagueStats.Logic.Models
         public string Id { get; private set; }
         public string Name { get; private set; }
         public string Country { get; private set; }
-        public Club MainClub { get; private set; }
+        public List<string> AlternativeNames { get; private set; }
 
-        public Club()
-        {
-            
-        }
-
-        public Club(string id, string name, string country, Club mainClub)
+        public Club(string id, string name, string country)
         {
             Id = id;
             Name = name;
             Country = country;
-            MainClub = mainClub;
-        }
-
-        public Club(string id, string name, string country)
-            : this (id, name, country, null)
-        {
-        }
-
-        public Club(string name, string country, Club mainClub)
-            : this(Guid.NewGuid().ToString(), name, country, mainClub)
-        {
+            AlternativeNames = new List<string>();
         }
 
         public Club(string name, string country)
-            : this(Guid.NewGuid().ToString(), name, country, null)
+            : this(Guid.NewGuid().ToString(), name, country)
         {
         }
 
         public override string ToString()
         {
-            return MainClub?.ToString() ?? Name;
+            return Name;
+        }
+
+        public void AddAlternativeName(string alternativeName)
+        {
+            if (!AlternativeNames.Contains(alternativeName))
+            {
+                AlternativeNames.Add(alternativeName);
+            }
         }
     }
 }

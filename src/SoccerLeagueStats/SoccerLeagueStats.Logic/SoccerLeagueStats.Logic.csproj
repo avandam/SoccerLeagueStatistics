@@ -48,6 +48,7 @@
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Season.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SoccerLeagueStatsManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

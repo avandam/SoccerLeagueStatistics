@@ -14,17 +14,17 @@ namespace SoccerLeagueStats.Logic.Models
         public int Level { get; private set; }
         public int DefaultPointsForAWin { get; private set; }
 
-        public Competition(string id, string country, string name, int level)
+        public Competition(string id, string name, string country, int level, int defaultPointsForAWin)
         {
             Id = id;
             Country = country;
             Name = name;
             Level = level;
-            DefaultPointsForAWin = 3;
+            DefaultPointsForAWin = defaultPointsForAWin;
         }
 
-        public Competition(string country, string name, int level) 
-            : this (Guid.NewGuid().ToString(), country, name, level)
+        public Competition(string name, string country, int level) 
+            : this (Guid.NewGuid().ToString(), name, country, level, 3)
         {
         }
 
