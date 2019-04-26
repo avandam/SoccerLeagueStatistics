@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
 using SoccerLeagueStats.Logic.FileManagement;
 using SoccerLeagueStats.Logic.Models;
 
@@ -11,10 +7,10 @@ namespace SoccerLeagueStats.Logic
 {
     public class SoccerLeagueStatsManager
     {
-        private List<Club> allClubs = FileReader.GetAllClubs();
-        private List<Competition> allCompetitions = FileReader.GetAllCompetitions();
-        private List<Season> allSeasons = FileReader.GetAllSeasons();
-        private List<Result> allResults = FileReader.GetAllResults();
+        private readonly List<Club> allClubs = ClubFileHandler.GetAllClubs();
+        private readonly List<Competition> allCompetitions = CompetitionFileHandler.GetAllCompetitions();
+        private readonly List<Season> allSeasons = SeasonFileHandler.GetAllSeasons();
+        private readonly List<Result> allResults = ResultFileHandler.GetAllResults();
 
         public IReadOnlyCollection<Club> GetAllClubsInCountry(string country)
         {
@@ -23,7 +19,7 @@ namespace SoccerLeagueStats.Logic
 
         public IReadOnlyCollection<Competition> GetAllCompetitionInCountry(string country)
         {
-            return allCompetitions.Where(competition => competition.Country == country).OrderBy(competition => competition.Level).ToList().AsReadOnly();
+            return allCompetitions.Where(competition => competition.Country == country).OrderBy(competition => competition.Level).ThenBy(competition => competition.Name).ToList().AsReadOnly();
         }
 
         public IReadOnlyCollection<Season> GetSeasonsForCompetition(string competitionId)
@@ -36,19 +32,27 @@ namespace SoccerLeagueStats.Logic
             return allResults.Where(result => result.Season.Id == seasonId).OrderBy(result => result.Place).ToList().AsReadOnly();
         }
 
+        //TODO: Fix that the All* variables are used.
         public IReadOnlyCollection<Result> GetAllTimeRankingsForCompetition(string competitionId)
         {
             List<Season> seasonsInCompetition = allSeasons.Where(season => season.Competition.Id == competitionId).ToList();
             List<Club> clubsInCompetition = new List<Club>();
             foreach (Season season in seasonsInCompetition)
             {
-                clubsInCompetition.AddRange(allResults.Where(result => result.Season == season).Select(result => result.Club));
+                var clubs = allResults.Where(result => result.Season == season).Select(result => result.Club);
+                foreach (var club in clubs)
+                {
+                    if (!clubsInCompetition.Exists(clubToCheck => clubToCheck.Name == club.Name))
+                    {
+                        clubsInCompetition.Add(club);
+                    }
+                }
             }
 
             List<Result> resultsPerClub = new List<Result>();
             foreach (Club club in clubsInCompetition)
             {
-                List<Result> resultsForClub = allResults.Where(resultC => resultC.Club == club && seasonsInCompetition.Contains(resultC.Season)).ToList();
+                List<Result> resultsForClub = allResults.Where(resultC => resultC.Club.Name == club.Name && seasonsInCompetition.Contains(resultC.Season)).ToList();
                 resultsPerClub.Add(new Result(resultsForClub.Sum(resultD => resultD.Wins), resultsForClub.Sum(resultD => resultD.Draws), resultsForClub.Sum(resultD => resultD.Losses), resultsForClub.Sum(resultD => resultD.GoalsFor), resultsForClub.Sum(resultD => resultD.GoalsAgainst), club));
             }
 

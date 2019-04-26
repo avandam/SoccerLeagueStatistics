@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SoccerLeagueStats.Logic.FileManagement
 {
     public static class FileReader
     {
+        //TODO: Use All* variables to ensure uniqueness
         public static Club GetClub(string id)
         {
             string filePath = Path.Combine(Settings.BaseDirectoryName, "Clubs", id);

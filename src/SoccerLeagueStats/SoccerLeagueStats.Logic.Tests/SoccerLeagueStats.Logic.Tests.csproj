@@ -56,6 +56,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="FileManagement\ClubFileHandlingTest.cs" />
+    <Compile Include="FileManagement\SeasonFileHandlingTest.cs" />
+    <Compile Include="FileManagement\CompetionFileHandlingTest.cs" />
     <Compile Include="FileManagement\FileHandlingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using SoccerLeagueStats.Logic.Models;
 
 namespace SoccerLeagueStats.Logic.FileManagement
